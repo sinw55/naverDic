@@ -1,4 +1,4 @@
-package com.android.apps.naverdic.xmlclass;
+package com.android.apps.naverdic.xmlclass.realtime;
 
 import java.util.ArrayList;
 import java.util.List;

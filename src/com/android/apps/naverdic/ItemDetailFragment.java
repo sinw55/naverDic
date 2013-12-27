@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.android.apps.naverdic.dummy.DummyContent;
 import com.android.apps.naverdic.servicecall.RequestTaskHandler;
-import com.android.apps.naverdic.xmlclass.Result;
+import com.android.apps.naverdic.xmlclass.realtime.Result;
 
 /**
  * A fragment representing a single Item detail screen.

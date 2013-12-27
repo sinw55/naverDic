@@ -1,4 +1,4 @@
-package com.android.apps.naverdic.xmlclass;
+package com.android.apps.naverdic.xmlclass.realtime;
 
 public class RNum {
 	private String K;
