@@ -11,9 +11,9 @@ public class Channel {
 	private int total;
 	private int start;
 	private int display;
-	private List<Item> items = new ArrayList<Item>();
+	private List<MovieItem> items = new ArrayList<MovieItem>();
 	
-	public void addItem(Item item) {
+	public void addItem(MovieItem item) {
 		items.add(item);
 	}
 	public String getTitle() {
@@ -58,10 +58,10 @@ public class Channel {
 	public void setDisplay(int display) {
 		this.display = display;
 	}
-	public List<Item> getItems() {
+	public List<MovieItem> getItems() {
 		return items;
 	}
-	public void setItems(List<Item> items) {
+	public void setItems(List<MovieItem> items) {
 		this.items = items;
 	}
 }

@@ -2,13 +2,13 @@ package com.android.apps.naverdic.xmlclass.realtime;
 
 
 public class Result {
-	Item item;
+	RTItem item;
 
-	public Item getItem() {
+	public RTItem getItem() {
 		return item;
 	}
 
-	public void setItem(Item item) {
+	public void setItem(RTItem item) {
 		this.item = item;
 	}
 	

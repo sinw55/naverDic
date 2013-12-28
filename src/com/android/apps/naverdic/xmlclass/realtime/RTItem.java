@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Item {
+public class RTItem {
 	List<RNum> rns;
 	
-	public Item() {
+	public RTItem() {
 		rns = new ArrayList<RNum>();
 	}
 

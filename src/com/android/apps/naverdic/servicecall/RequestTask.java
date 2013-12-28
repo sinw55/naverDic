@@ -18,8 +18,9 @@ import android.widget.TextView;
 
 import com.android.apps.naverdic.R;
 import com.android.apps.naverdic.xmlclass.movie.Channel;
-import com.android.apps.naverdic.xmlclass.movie.Item;
+import com.android.apps.naverdic.xmlclass.movie.MovieItem;
 import com.android.apps.naverdic.xmlclass.realtime.RNum;
+import com.android.apps.naverdic.xmlclass.realtime.RTItem;
 import com.android.apps.naverdic.xmlclass.realtime.Result;
 
 public class RequestTask extends AsyncTask<String, Integer, String> {	
@@ -89,7 +90,7 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
 	}
 	protected String getMovieSearchResultInfo(Channel channel) {
 		StringBuilder sb = new StringBuilder();
-		List<Item> items = channel.getItems();
+		List<MovieItem> items = channel.getItems();
 		sb.append("title : " + channel.getTitle() + "\n");
 		sb.append("link : " + channel.getLink() + "\n");
 		sb.append("description" + channel.getDescription() + "\n");
@@ -98,13 +99,17 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
 		sb.append("start : " + channel.getStart() + "\n");
 		sb.append("display : " + channel.getDisplay() + "\n");
 		
-		for (Item item : items) {
+		for (MovieItem item : items) {
 			sb.append("----------------\n");
 			sb.append("title : " + item.getTitle() + "\n");
-			sb.append("originallink : " + item.getOriginallink()  + "\n");
 			sb.append("link : " + item.getLink() + "\n");
-			sb.append("description : " + item.getDescription() + "\n");
+			sb.append("image : " + item.getImage() + "\n");
+			sb.append("subtitle : " + item.getSubtitle() + "\n");
 			sb.append("pubDate : " + item.getPubDate() + "\n");
+			sb.append("director : " + item.getDirector() + "\n");
+			sb.append("actor : " + item.getActor() + "\n");
+			sb.append("userRating : " + item.getUserRating() + "\n");
+			
 		}
 		return sb.toString();
 		
@@ -123,7 +128,7 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
     //http://theopentutorials.com/tutorials/android/xml/android-simple-xmlpullparser-tutorial/
 	protected Result parserRealTimeSearchOrder(String xmlResult) {
 		Result result = null;
-		com.android.apps.naverdic.xmlclass.realtime.Item item = null;
+		RTItem item = null;
 		RNum rnum = null;
 		String text = "";
 		try {
@@ -139,7 +144,7 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
 	                    if (tagname.equalsIgnoreCase("result")) {
 	                        result = new Result();
 	                    } else if (tagname.equalsIgnoreCase("item")) {
-	                    	item = new com.android.apps.naverdic.xmlclass.realtime.Item();
+	                    	item = new RTItem();
 	                    } else if (tagname.matches("R([1-9]|10)")) {
 	                    	rnum = new RNum();
 	                    }
@@ -173,7 +178,7 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
 	
 	protected Channel parserMovieSearchOrder(String xmlResult) {
 		Channel channel = null;
-		com.android.apps.naverdic.xmlclass.movie.Item item = null;
+		MovieItem item = null;
 		String text = "";
 		boolean isChannelChild = false;
 		try {
@@ -190,7 +195,7 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
 	                    	channel = new Channel();
 	                    	isChannelChild = true;
 	                    } else if (tagname.equalsIgnoreCase("item")) {
-	                    	item = new com.android.apps.naverdic.xmlclass.movie.Item();
+	                    	item = new MovieItem();
 	                    	isChannelChild = false;
 	                    } 
 	                    break;
@@ -202,31 +207,37 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
 	                case XmlPullParser.END_TAG:
 	                	if (isChannelChild) {
 	                		if (tagname.equalsIgnoreCase("title")) {
-		                    	
+	                			channel.setTitle(text);
 		                    } else if (tagname.equalsIgnoreCase("link")) {
-		                    	
+		                    	channel.setLink(text);
 		                    } else if (tagname.equalsIgnoreCase("description")) {
-		                    	
+		                    	channel.setDescription(text);
 		                    } else if (tagname.equalsIgnoreCase("lastBuildDate")) {
-		                    	
+		                    	channel.setLastBuildDate(text);
 		                    } else if (tagname.equalsIgnoreCase("total")) {
-		                    	
+		                    	channel.setTotal(Integer.parseInt(text));
 		                    } else if (tagname.equalsIgnoreCase("start")) {
-		                    	
+		                    	channel.setStart(Integer.parseInt(text));
 		                    } else if (tagname.equalsIgnoreCase("display")) {
-		                    	
+		                    	channel.setDisplay(Integer.parseInt(text));
 		                    }
 	                	} else {
 	                		if (tagname.equalsIgnoreCase("title")) {
 	                			item.setTitle(text);
-		                    } else if (tagname.equalsIgnoreCase("originallink")) {
-		                    	item.setOriginallink(text);
 		                    } else if (tagname.equalsIgnoreCase("link")) {
 		                    	item.setLink(text);
-		                    } else if (tagname.equalsIgnoreCase("description")) {
-		                    	item.setDescription(text);
+		                    } else if (tagname.equalsIgnoreCase("image")) {
+		                    	item.setImage(text);
+		                    } else if (tagname.equalsIgnoreCase("subtitle")) {
+		                    	item.setSubtitle(text);
 		                    } else if (tagname.equalsIgnoreCase("pubDate")) {
 		                        item.setPubDate(text);
+		                    } else if (tagname.equalsIgnoreCase("director")) {
+		                        item.setDirector(text);
+		                    } else if (tagname.equalsIgnoreCase("actor")) {
+		                        item.setActor(text);
+		                    } else if (tagname.equalsIgnoreCase("userRating")) {
+		                        item.setUserRating(text);
 		                    } else if (tagname.equalsIgnoreCase("item")) {
 		                    	channel.addItem(item);
 		                    } 
