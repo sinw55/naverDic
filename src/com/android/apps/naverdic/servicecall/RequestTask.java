@@ -17,8 +17,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.apps.naverdic.R;
-import com.android.apps.naverdic.xmlclass.movie.Channel;
+import com.android.apps.naverdic.xmlclass.movie.MovieChannel;
 import com.android.apps.naverdic.xmlclass.movie.MovieItem;
+import com.android.apps.naverdic.xmlclass.news.NewsChannel;
+import com.android.apps.naverdic.xmlclass.news.NewsItem;
 import com.android.apps.naverdic.xmlclass.realtime.RNum;
 import com.android.apps.naverdic.xmlclass.realtime.RTItem;
 import com.android.apps.naverdic.xmlclass.realtime.Result;
@@ -60,7 +62,7 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
 		if (ID.equals("1")) {
 			((TextView) view.findViewById(R.id.item_detail)).setText(getRealTimeSearchOrderResultInfo(parserRealTimeSearchOrder(xmlResult)));	
 		} else if (ID.equals("2")) {
-			((TextView) view.findViewById(R.id.item_detail)).setText(xmlResult);
+			((TextView) view.findViewById(R.id.item_detail)).setText(getNewsSearchResultInfo(parserNewsSearchOrder(xmlResult)));
 		} else if (ID.equals("3")) {
 			((TextView) view.findViewById(R.id.item_detail)).setText(getMovieSearchResultInfo(parserMovieSearchOrder(xmlResult)));
 		}
@@ -88,16 +90,16 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
 		}
 		return st.toString();
 	}
-	protected String getMovieSearchResultInfo(Channel channel) {
+	protected String getMovieSearchResultInfo(MovieChannel movieChannel) {
 		StringBuilder sb = new StringBuilder();
-		List<MovieItem> items = channel.getItems();
-		sb.append("title : " + channel.getTitle() + "\n");
-		sb.append("link : " + channel.getLink() + "\n");
-		sb.append("description" + channel.getDescription() + "\n");
-		sb.append("lastBuildDate" + channel.getLastBuildDate() + "\n");
-		sb.append("total : " + channel.getTotal() + "\n");
-		sb.append("start : " + channel.getStart() + "\n");
-		sb.append("display : " + channel.getDisplay() + "\n");
+		List<MovieItem> items = movieChannel.getItems();
+		sb.append("title : " + movieChannel.getTitle() + "\n");
+		sb.append("link : " + movieChannel.getLink() + "\n");
+		sb.append("description" + movieChannel.getDescription() + "\n");
+		sb.append("lastBuildDate" + movieChannel.getLastBuildDate() + "\n");
+		sb.append("total : " + movieChannel.getTotal() + "\n");
+		sb.append("start : " + movieChannel.getStart() + "\n");
+		sb.append("display : " + movieChannel.getDisplay() + "\n");
 		
 		for (MovieItem item : items) {
 			sb.append("----------------\n");
@@ -114,6 +116,30 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
 		return sb.toString();
 		
 	}
+	
+	protected String getNewsSearchResultInfo(NewsChannel newsChannel) {
+		StringBuilder sb = new StringBuilder();
+		List<NewsItem> items = newsChannel.getItems();
+		sb.append("title : " + newsChannel.getTitle() + "\n");
+		sb.append("link : " + newsChannel.getLink() + "\n");
+		sb.append("description" + newsChannel.getDescription() + "\n");
+		sb.append("lastBuildDate" + newsChannel.getLastBuildDate() + "\n");
+		sb.append("total : " + newsChannel.getTotal() + "\n");
+		sb.append("start : " + newsChannel.getStart() + "\n");
+		sb.append("display : " + newsChannel.getDisplay() + "\n");
+		
+		for (NewsItem item : items) {
+			sb.append("----------------\n");
+			sb.append("title : " + item.getTitle() + "\n");
+			sb.append("originallink : " + item.getOriginallink() + "\n");
+			sb.append("link : " + item.getLink() + "\n");
+			sb.append("description : " + item.getDescription() + "\n");
+			sb.append("pubDate : " + item.getPubDate() + "\n");
+		}
+		return sb.toString();
+		
+	}
+	
 	protected String getRealTimeSearchOrderResultInfo(Result result) {
     	StringBuilder sb = new StringBuilder();
     	List<RNum> rns = result.getItem().getRns();
@@ -176,8 +202,8 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
 		return result;
 	}
 	
-	protected Channel parserMovieSearchOrder(String xmlResult) {
-		Channel channel = null;
+	protected MovieChannel parserMovieSearchOrder(String xmlResult) {
+		MovieChannel movieChannel = null;
 		MovieItem item = null;
 		String text = "";
 		boolean isChannelChild = false;
@@ -192,7 +218,7 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
                 switch (eventType) {
 	                case XmlPullParser.START_TAG:
 	                    if (tagname.equalsIgnoreCase("channel")) {
-	                    	channel = new Channel();
+	                    	movieChannel = new MovieChannel();
 	                    	isChannelChild = true;
 	                    } else if (tagname.equalsIgnoreCase("item")) {
 	                    	item = new MovieItem();
@@ -207,19 +233,19 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
 	                case XmlPullParser.END_TAG:
 	                	if (isChannelChild) {
 	                		if (tagname.equalsIgnoreCase("title")) {
-	                			channel.setTitle(text);
+	                			movieChannel.setTitle(text);
 		                    } else if (tagname.equalsIgnoreCase("link")) {
-		                    	channel.setLink(text);
+		                    	movieChannel.setLink(text);
 		                    } else if (tagname.equalsIgnoreCase("description")) {
-		                    	channel.setDescription(text);
+		                    	movieChannel.setDescription(text);
 		                    } else if (tagname.equalsIgnoreCase("lastBuildDate")) {
-		                    	channel.setLastBuildDate(text);
+		                    	movieChannel.setLastBuildDate(text);
 		                    } else if (tagname.equalsIgnoreCase("total")) {
-		                    	channel.setTotal(Integer.parseInt(text));
+		                    	movieChannel.setTotal(Integer.parseInt(text));
 		                    } else if (tagname.equalsIgnoreCase("start")) {
-		                    	channel.setStart(Integer.parseInt(text));
+		                    	movieChannel.setStart(Integer.parseInt(text));
 		                    } else if (tagname.equalsIgnoreCase("display")) {
-		                    	channel.setDisplay(Integer.parseInt(text));
+		                    	movieChannel.setDisplay(Integer.parseInt(text));
 		                    }
 	                	} else {
 	                		if (tagname.equalsIgnoreCase("title")) {
@@ -239,7 +265,7 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
 		                    } else if (tagname.equalsIgnoreCase("userRating")) {
 		                        item.setUserRating(text);
 		                    } else if (tagname.equalsIgnoreCase("item")) {
-		                    	channel.addItem(item);
+		                    	movieChannel.addItem(item);
 		                    } 
 	                	}
 	                    break;
@@ -249,7 +275,77 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
                 eventType = xpp.next();
 			}
 		} catch (Exception e) {}
-		return channel;
+		return movieChannel;
+	}
+	
+	protected NewsChannel parserNewsSearchOrder(String xmlResult) {
+		NewsChannel newsChannel = null;
+		NewsItem item = null;
+		String text = "";
+		boolean isChannelChild = false;
+		try {
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			factory.setNamespaceAware(true);
+			XmlPullParser xpp = factory.newPullParser();
+			xpp.setInput(new StringReader(xmlResult));
+			int eventType = xpp.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT) {
+				String tagname = xpp.getName();
+                switch (eventType) {
+	                case XmlPullParser.START_TAG:
+	                    if (tagname.equalsIgnoreCase("channel")) {
+	                    	newsChannel = new NewsChannel();
+	                    	isChannelChild = true;
+	                    } else if (tagname.equalsIgnoreCase("item")) {
+	                    	item = new NewsItem();
+	                    	isChannelChild = false;
+	                    } 
+	                    break;
+	 
+	                case XmlPullParser.TEXT:
+	                    text = xpp.getText();
+	                    break;
+	 
+	                case XmlPullParser.END_TAG:
+	                	if (isChannelChild) {
+	                		if (tagname.equalsIgnoreCase("title")) {
+	                			newsChannel.setTitle(text);
+		                    } else if (tagname.equalsIgnoreCase("link")) {
+		                    	newsChannel.setLink(text);
+		                    } else if (tagname.equalsIgnoreCase("description")) {
+		                    	newsChannel.setDescription(text);
+		                    } else if (tagname.equalsIgnoreCase("lastBuildDate")) {
+		                    	newsChannel.setLastBuildDate(text);
+		                    } else if (tagname.equalsIgnoreCase("total")) {
+		                    	newsChannel.setTotal(Integer.parseInt(text));
+		                    } else if (tagname.equalsIgnoreCase("start")) {
+		                    	newsChannel.setStart(Integer.parseInt(text));
+		                    } else if (tagname.equalsIgnoreCase("display")) {
+		                    	newsChannel.setDisplay(Integer.parseInt(text));
+		                    }
+	                	} else {
+	                		if (tagname.equalsIgnoreCase("title")) {
+	                			item.setTitle(text);
+		                    } else if (tagname.equalsIgnoreCase("originallink")) {
+		                    	item.setOriginallink(text);
+		                    } else if (tagname.equalsIgnoreCase("link")) {
+		                    	item.setLink(text);
+		                    } else if (tagname.equalsIgnoreCase("description")) {
+		                    	item.setDescription(text);
+		                    } else if (tagname.equalsIgnoreCase("pubDate")) {
+		                        item.setPubDate(text);
+		                    } else if (tagname.equalsIgnoreCase("item")) {
+		                    	newsChannel.addItem(item);
+		                    } 
+	                	}
+	                    break;
+	                default:
+	                    break;
+				}
+                eventType = xpp.next();
+			}
+		} catch (Exception e) {}
+		return newsChannel;
 	}
 
 }

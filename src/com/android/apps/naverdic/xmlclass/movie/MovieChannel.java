@@ -3,7 +3,7 @@ package com.android.apps.naverdic.xmlclass.movie;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Channel {
+public class MovieChannel {
 	private String title;
 	private String link;
 	private String description;
