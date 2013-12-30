@@ -1,6 +1,5 @@
 package com.android.apps.naverdic.xmlclass.realtime;
 
-
 public class Result {
 	RTItem item;
 
