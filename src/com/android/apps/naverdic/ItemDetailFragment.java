@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 
 import com.android.apps.naverdic.dummy.DummyContent;
 import com.android.apps.naverdic.servicecall.RequestTaskHandler;
@@ -55,6 +56,7 @@ public class ItemDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
+        
         rth = new RequestTaskHandler(rootView);
         // Show the dummy content as text in a TextView.
         if (mItem != null) {

@@ -14,7 +14,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.os.AsyncTask;
 import android.view.View;
-import android.widget.TextView;
+import android.webkit.WebView;
 
 import com.android.apps.naverdic.R;
 import com.android.apps.naverdic.xmlclass.movie.MovieChannel;
@@ -54,17 +54,23 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
 	
 	@Override
 	protected void onProgressUpdate(Integer... progress) {
-		((TextView) view.findViewById(R.id.item_detail)).setText("Progressing...");
+		//((TextView) view.findViewById(R.id.item_detail)).setText("Progressing...");
     }
 	
 	@Override
 	protected void onPostExecute(String xmlResult) {
+		
+		
 		if (ID.equals("1")) {
-			((TextView) view.findViewById(R.id.item_detail)).setText(getRealTimeSearchOrderResultInfo(parserRealTimeSearchOrder(xmlResult)));	
+			//((TextView) view.findViewById(R.id.item_detail)).setText(getRealTimeSearchOrderResultInfo(parserRealTimeSearchOrder(xmlResult)));
+			
+			((WebView)view.findViewById(R.id.webView)).loadData(getRealTimeSearchOrderResultInfo(parserRealTimeSearchOrder(xmlResult)), "text/html", null);
 		} else if (ID.equals("2")) {
-			((TextView) view.findViewById(R.id.item_detail)).setText(getNewsSearchResultInfo(parserNewsSearchOrder(xmlResult)));
+			//((TextView) view.findViewById(R.id.item_detail)).setText(getNewsSearchResultInfo(parserNewsSearchOrder(xmlResult)));
+			((WebView)view.findViewById(R.id.webView)).loadData(getNewsSearchResultInfo(parserNewsSearchOrder(xmlResult)), "text/html", "UTF-8");
 		} else if (ID.equals("3")) {
-			((TextView) view.findViewById(R.id.item_detail)).setText(getMovieSearchResultInfo(parserMovieSearchOrder(xmlResult)));
+			//((TextView) view.findViewById(R.id.item_detail)).setText(getMovieSearchResultInfo(parserMovieSearchOrder(xmlResult)));
+			((WebView)view.findViewById(R.id.webView)).loadData(getMovieSearchResultInfo(parserMovieSearchOrder(xmlResult)), "text/html", "UTF-8");
 		}
     }
 
@@ -93,26 +99,28 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
 	protected String getMovieSearchResultInfo(MovieChannel movieChannel) {
 		StringBuilder sb = new StringBuilder();
 		List<MovieItem> items = movieChannel.getItems();
-		sb.append("title : " + movieChannel.getTitle() + "\n");
-		sb.append("link : " + movieChannel.getLink() + "\n");
-		sb.append("description" + movieChannel.getDescription() + "\n");
-		sb.append("lastBuildDate" + movieChannel.getLastBuildDate() + "\n");
-		sb.append("total : " + movieChannel.getTotal() + "\n");
-		sb.append("start : " + movieChannel.getStart() + "\n");
-		sb.append("display : " + movieChannel.getDisplay() + "\n");
+		sb.append("<html><body>");
+		sb.append("<h3><a href='" + movieChannel.getLink() + "'>" + movieChannel.getTitle() + "</a></h3>");
+		sb.append("<p>description" + movieChannel.getDescription() + "</p>");
+		sb.append("<p>lastBuildDate" + movieChannel.getLastBuildDate() + "</p>");
+		sb.append("<p>total : " + movieChannel.getTotal() + "</p>");
+		sb.append("<p>start : " + movieChannel.getStart() + "</p>");
+		sb.append("<p>display : " + movieChannel.getDisplay() + "</p>");
 		
+		sb.append("<div><ul>");
 		for (MovieItem item : items) {
-			sb.append("----------------\n");
-			sb.append("title : " + item.getTitle() + "\n");
-			sb.append("link : " + item.getLink() + "\n");
-			sb.append("image : " + item.getImage() + "\n");
-			sb.append("subtitle : " + item.getSubtitle() + "\n");
-			sb.append("pubDate : " + item.getPubDate() + "\n");
-			sb.append("director : " + item.getDirector() + "\n");
-			sb.append("actor : " + item.getActor() + "\n");
-			sb.append("userRating : " + item.getUserRating() + "\n");
-			
+			sb.append("<li><a href='" + item.getLink() + "'>");
+			sb.append("<img src='" + item.getImage() + "'>");
+			sb.append("<span>" + item.getTitle() + "</span>");
+			sb.append("<div>" + item.getSubtitle() + "</div>");
+			sb.append("<div>" + item.getPubDate() + "</div>");
+			sb.append("<div>" + item.getDirector() + "</div>");
+			sb.append("<div>" + item.getActor() + "</div>");
+			sb.append("<div>" + item.getUserRating() + "</div>");
+			sb.append("</a></li>");
 		}
+		sb.append("</ul></div>");
+		sb.append("</body></html>");
 		return sb.toString();
 		
 	}
@@ -143,11 +151,11 @@ public class RequestTask extends AsyncTask<String, Integer, String> {
 	protected String getRealTimeSearchOrderResultInfo(Result result) {
     	StringBuilder sb = new StringBuilder();
     	List<RNum> rns = result.getItem().getRns();
-    	
+    	sb.append("<html><body><ol>");
     	for (RNum rn : rns) {
-    		sb.append(rn.getK() + " ," + rn.getS() + " ," + rn.getV() + "\n");
+    		sb.append("<li>" + rn.getK() + " ," + rn.getS() + " ," + rn.getV() + "</li>");
     	}
-    	
+    	sb.append("</ol></body></html>");
     	return sb.toString();
     }
     
